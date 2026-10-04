@@ -27,14 +27,15 @@ public class FacturaController {
     }
 
     @PostMapping
-    public ResponseEntity<Factura> crear(@RequestBody Factura factura) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(facturaService.guardar(factura));
+    public ResponseEntity<Factura> crear(@RequestBody FacturaDTO facturaDTO) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(facturaService.guardar(convertirADominio(facturaDTO)));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Factura> actualizar(@PathVariable Long id, @RequestBody Factura factura) {
+    public ResponseEntity<Factura> actualizar(@PathVariable Long id, @RequestBody FacturaDTO facturaDTO) {
         return facturaService.obtenerPorId(id)
                 .map(existente -> {
+                    Factura factura = convertirADominio(facturaDTO);
                     factura.setId(id);
                     return ResponseEntity.ok(facturaService.guardar(factura));
                 })
@@ -48,5 +49,14 @@ public class FacturaController {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.notFound().build();
+    }
+
+    private Factura convertirADominio(FacturaDTO dto) {
+        Factura factura = new Factura();
+        factura.setFechaEmision(dto.getFechaEmision());
+        factura.setMontoTotal(dto.getMontoTotal());
+        factura.setEstadoPago(dto.getEstadoPago());
+        factura.setMetodoPago(dto.getMetodoPago());
+        return factura;
     }
 }

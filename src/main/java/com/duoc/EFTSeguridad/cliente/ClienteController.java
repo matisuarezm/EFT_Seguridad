@@ -27,14 +27,16 @@ public class ClienteController {
     }
 
     @PostMapping
-    public ResponseEntity<Cliente> crear(@RequestBody Cliente cliente) {
+    public ResponseEntity<Cliente> crear(@RequestBody ClienteDTO clienteDTO) {
+        Cliente cliente = convertirADominio(clienteDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(clienteService.guardar(cliente));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Cliente> actualizar(@PathVariable Long id, @RequestBody Cliente cliente) {
+    public ResponseEntity<Cliente> actualizar(@PathVariable Long id, @RequestBody ClienteDTO clienteDTO) {
         return clienteService.obtenerPorId(id)
                 .map(existente -> {
+                    Cliente cliente = convertirADominio(clienteDTO);
                     cliente.setId(id);
                     return ResponseEntity.ok(clienteService.guardar(cliente));
                 })
@@ -48,5 +50,16 @@ public class ClienteController {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.notFound().build();
+    }
+
+    // Método auxiliar privado al final de la clase
+    private Cliente convertirADominio(ClienteDTO dto) {
+        Cliente cliente = new Cliente();
+        cliente.setRut(dto.getRut());
+        cliente.setNombre(dto.getNombre());
+        cliente.setApellido(dto.getApellido());
+        cliente.setTelefono(dto.getTelefono());
+        cliente.setEmail(dto.getEmail());
+        return cliente;
     }
 }

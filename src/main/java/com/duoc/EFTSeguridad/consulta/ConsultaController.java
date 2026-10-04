@@ -27,14 +27,15 @@ public class ConsultaController {
     }
 
     @PostMapping
-    public ResponseEntity<Consulta> crear(@RequestBody Consulta consulta) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(consultaService.guardar(consulta));
+    public ResponseEntity<Consulta> crear(@RequestBody ConsultaDTO consultaDTO) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(consultaService.guardar(convertirADominio(consultaDTO)));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Consulta> actualizar(@PathVariable Long id, @RequestBody Consulta consulta) {
+    public ResponseEntity<Consulta> actualizar(@PathVariable Long id, @RequestBody ConsultaDTO consultaDTO) {
         return consultaService.obtenerPorId(id)
                 .map(existente -> {
+                    Consulta consulta = convertirADominio(consultaDTO);
                     consulta.setId(id);
                     return ResponseEntity.ok(consultaService.guardar(consulta));
                 })
@@ -48,5 +49,13 @@ public class ConsultaController {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.notFound().build();
+    }
+
+    private Consulta convertirADominio(ConsultaDTO dto) {
+        Consulta consulta = new Consulta();
+        consulta.setFecha(dto.getFecha());
+        consulta.setDiagnostico(dto.getDiagnostico());
+        consulta.setTratamiento(dto.getTratamiento());
+        return consulta;
     }
 }

@@ -27,15 +27,16 @@ public class MascotaController {
     }
 
     @PostMapping
-    public ResponseEntity<Mascota> crear(@RequestBody Mascota mascota) {
-        Mascota nuevaMascota = mascotaService.guardar(mascota);
+    public ResponseEntity<Mascota> crear(@RequestBody MascotaDTO mascotaDTO) {
+        Mascota nuevaMascota = mascotaService.guardar(convertirADominio(mascotaDTO));
         return ResponseEntity.status(HttpStatus.CREATED).body(nuevaMascota);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Mascota> actualizar(@PathVariable Long id, @RequestBody Mascota mascota) {
+    public ResponseEntity<Mascota> actualizar(@PathVariable Long id, @RequestBody MascotaDTO mascotaDTO) {
         return mascotaService.obtenerPorId(id)
                 .map(existente -> {
+                    Mascota mascota = convertirADominio(mascotaDTO);
                     mascota.setId(id);
                     return ResponseEntity.ok(mascotaService.guardar(mascota));
                 })
@@ -49,5 +50,15 @@ public class MascotaController {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.notFound().build();
+    }
+
+    private Mascota convertirADominio(MascotaDTO dto) {
+        Mascota mascota = new Mascota();
+        mascota.setNombre(dto.getNombre());
+        mascota.setEspecie(dto.getEspecie());
+        mascota.setRaza(dto.getRaza());
+        mascota.setEdad(dto.getEdad());
+        mascota.setNombreDuenio(dto.getNombreDuenio());
+        return mascota;
     }
 }

@@ -1,6 +1,5 @@
 package com.duoc.EFTSeguridad.consulta;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -10,8 +9,11 @@ import java.util.Optional;
 @Service
 public class ConsultaService {
 
-    @Autowired
     private ConsultaRepository consultaRepository;
+
+    public ConsultaService(ConsultaRepository consultaRepository) {
+        this.consultaRepository = consultaRepository;
+    }
 
     public List<Consulta> obtenerTodas() {
         return consultaRepository.findAll();

@@ -1,6 +1,5 @@
 package com.duoc.EFTSeguridad.factura;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -10,8 +9,11 @@ import java.util.Optional;
 @Service
 public class FacturaService {
 
-    @Autowired
     private FacturaRepository facturaRepository;
+
+    public FacturaService(FacturaRepository facturaRepository) {
+        this.facturaRepository = facturaRepository;
+    }
 
     public List<Factura> obtenerTodas() {
         return facturaRepository.findAll();

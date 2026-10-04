@@ -1,6 +1,5 @@
 package com.duoc.EFTSeguridad.consulta;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,8 +10,11 @@ import java.util.List;
 @RequestMapping("/api/consultas")
 public class ConsultaController {
 
-    @Autowired
     private ConsultaService consultaService;
+
+    public ConsultaController(ConsultaService consultaService) {
+        this.consultaService = consultaService;
+    }
 
     @GetMapping
     public ResponseEntity<List<Consulta>> listar() {

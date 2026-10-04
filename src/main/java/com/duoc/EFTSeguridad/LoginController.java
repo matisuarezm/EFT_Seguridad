@@ -7,24 +7,22 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.duoc.EFTSeguridad.usuario.MyUserDetailsService;
-import com.duoc.EFTSeguridad.usuario.User;
 
 
 @RestController
 public class LoginController {
 
     @Autowired
-    JWTAuthenticationConfig jwtAuthtenticationConfig;
+    private JWTAuthenticationConfig jwtAuthtenticationConfig;
 
-    @Autowired
     private MyUserDetailsService userDetailsService;
 
-    @PostMapping("/login")
-    public String login(@RequestBody User loginRequest) {
+    public LoginController(MyUserDetailsService userDetailsService) {
+        this.userDetailsService = userDetailsService;
+    }
 
-        /**
-        * En el ejemplo no se realiza la correcta validación del usuario
-        */
+    @PostMapping("/login")
+    public String login(@RequestBody LoginRequestDTO loginRequest) {
 
         final UserDetails userDetails = userDetailsService.loadUserByUsername(loginRequest.getUsername());
 
@@ -32,8 +30,7 @@ public class LoginController {
             throw new RuntimeException("Invalid login");
         }
 
-        String token = jwtAuthtenticationConfig.getJWTToken(loginRequest.getUsername());
-        return token;
+        return jwtAuthtenticationConfig.getJWTToken(loginRequest.getUsername());
     }
 
 }

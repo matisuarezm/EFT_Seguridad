@@ -21,7 +21,7 @@ public class MyUserDetailsService implements UserDetailsService {
         Logger logger
         = LoggerFactory.getLogger(MyUserDetailsService.class);
 
-    @Autowired
+
     private UserRepository userRepository;
 
 

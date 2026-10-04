@@ -1,0 +1,16 @@
+services:
+  mysql-cdy2203:
+    image: mysql:8.0
+    container_name: mysql-EFTSeguridad
+    ports:
+      - "3307:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: eftseguridad
+      MYSQL_USER: myuser
+      MYSQL_PASSWORD: password
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+volumes:
+  mysql_data:
